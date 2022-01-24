@@ -3,28 +3,24 @@ import datetime
 
 import allure
 from behave import *
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 class Appcenter:
-    @given(u'Launch Chrome Browser')
+    @given(u'Open App Center homepage')
     def step_impl(context):
-        context.driver = webdriver.Chrome()
-    @then(u'Open App Center homepage')
+        context.web.open("https://apps.qiscus.com/en/")
+    @when(u'User in homepage')
     def OpenWeb(context):
-        context.driver.get("https://apps.qiscus.com/en/")
-
+        context.web.is_visible((By.XPATH, '//h1[contains(text(),"Qiscus Apps")]'))
     @then(u'verify have add-ons in homepage')
     def VerifyHomepage(context):
         time.sleep(2)
         try:
-            WebDriverWait(context.driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, 'card-app-desc')))
+            context.web.is_visible((By.CLASS_NAME, 'card-app-desc'))
         except:
             now = str(datetime.datetime.now())
             allure.attach(
-            context.driver.get_screenshot_as_png(),
+            context.web.get_screenshot_as_png(),
             name="Fail - "+now, attachment_type=allure.attachment_type.PNG
             )
             assert False
@@ -32,22 +28,26 @@ class Appcenter:
     @when(u'in App Center homepage click contact us')
     def step_impl(context):
         try:
-            WebDriverWait(context.driver, 10).until(EC.element_to_be_clickable((By.XPATH, '//a[contains(text(),"Contact Us")]'))).click()
+            time.sleep(2)
+            context.web.do_click((By.XPATH, '//a[contains(text(),"Contact Us")]'))
         except:
             now = str(datetime.datetime.now())
-            allure.attach(context.driver.get_screenshot_as_png(),name="Fail - " + now, attachment_type=allure.attachment_type.PNG)
+            allure.attach(
+                context.web.get_screenshot_as_png(),
+                name="Fail - " + now, attachment_type=allure.attachment_type.PNG
+            )
             assert False
 
     @then(u'verify if user in contact us page')
     def step_impl(context):
-
         try:
-            WebDriverWait(context.driver, 10).until(
-            EC.visibility_of_element_located((By.XPATH, '//h2[contains(text(),"Contact Sales")]'))).click()
+            time.sleep(5)
+            context.web.is_visible((By.XPATH, '//h2[contains(text(),"Contact Sales")]'))
+
         except:
             now = str(datetime.datetime.now())
             allure.attach(
-            context.driver.get_screenshot_as_png(),
-            name="Fail - " + now, attachment_type=allure.attachment_type.PNG
+                context.web.get_screenshot_as_png(),
+                name="Fail - " + now, attachment_type=allure.attachment_type.PNG
             )
             assert False
