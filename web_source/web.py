@@ -9,7 +9,6 @@ from selenium.webdriver.support.ui import Select
 class Web(object):
 
     def __init__(self, driver):
-        super(Web, self).__init__()
         self.driver = driver
 
     def open(self, url):
